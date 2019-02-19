@@ -15,7 +15,7 @@ jobs:
         command: yarn
     - run:
         name: Update lockfile
-        command: greenkeeper-lockfile-update
+        command: ~/.yarn/bin/greenkeeper-lockfile-update
     - save_cache:
         key: dependency-cache-{{ arch }}-{{ checksum "yarn.lock" }}
         paths:
