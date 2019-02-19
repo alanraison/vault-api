@@ -7,10 +7,7 @@ jobs:
     - checkout
     - run:
         name: Install greenkeeper-lockfile
-        command: sudo yarn global add greenkeeper-lockfile@1
-    - run:
-        name: Find yarn global bin
-        command: yarn global bin
+        command: yarn global add greenkeeper-lockfile@1
     - restore_cache:
         key: dependency-cache-{{ arch }}-{{ checksum "yarn.lock" }}
     - run:
@@ -26,6 +23,12 @@ jobs:
         - ~/.cache/yarn
     - persist_to_workspace:
         root: node_modules
+        paths:
+        - *
+    - persist_to_workspace:
+        root: ~/.yarn
+        paths:
+        - *
   test:
     docker:
     - image: circleci/node:10
@@ -33,13 +36,15 @@ jobs:
     - checkout
     - attach_workspace:
         at: node_modules
+    - attach_workspace:
+        at: ~/.yarn
     - run:
         name: test
         command:
           yarn test --coverage --coveragePathIgnorePatterns=jest.config.ts
     - run:
         name: Upload lockfile
-        command: greenkeeper-lockfile-upload
+        command: ~/.yarn/bin/greenkeeper-lockfile-upload
     - run:
         name: Upload coverage
         command: cat coverage/lcov.info | node_modules/.bin/coveralls
