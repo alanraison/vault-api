@@ -7,7 +7,10 @@ jobs:
     - checkout
     - run:
         name: Install greenkeeper-lockfile
-        command: 'sudo yarn global add greenkeeper-lockfile@1'
+        command: sudo yarn global add greenkeeper-lockfile@1
+    - run:
+        name: Find yarn global bin
+        command: yarn global bin
     - restore_cache:
         key: dependency-cache-{{ arch }}-{{ checksum "yarn.lock" }}
     - run:
@@ -21,13 +24,15 @@ jobs:
         paths:
         - node_modules
         - ~/.cache/yarn
+    - persist_to_workspace:
+        root: node_modules
   test:
     docker:
     - image: circleci/node:10
     steps:
     - checkout
-    - restore_cache:
-        key: dependency-cache-{{ arch }}-{{ checksum "yarn.lock" }}
+    - attach_workspace:
+        at: node_modules
     - run:
         name: test
         command:
