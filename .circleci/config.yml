@@ -24,11 +24,11 @@ jobs:
     - persist_to_workspace:
         root: node_modules
         paths:
-        - *
+        - '*'
     - persist_to_workspace:
         root: ~/.yarn
         paths:
-        - *
+        - '*'
   test:
     docker:
     - image: circleci/node:10
