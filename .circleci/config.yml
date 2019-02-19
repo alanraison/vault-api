@@ -25,10 +25,6 @@ jobs:
         root: node_modules
         paths:
         - '*'
-    - persist_to_workspace:
-        root: ~/.yarn
-        paths:
-        - '*'
   test:
     docker:
     - image: circleci/node:10
@@ -36,12 +32,13 @@ jobs:
     - checkout
     - attach_workspace:
         at: node_modules
-    - attach_workspace:
-        at: ~/.yarn
     - run:
         name: test
         command:
           yarn test --coverage --coveragePathIgnorePatterns=jest.config.ts
+    - run:
+        name: Install greenkeeper-lockfile
+        command: yarn global add greenkeeper-lockfile@1
     - run:
         name: Upload lockfile
         command: ~/.yarn/bin/greenkeeper-lockfile-upload
